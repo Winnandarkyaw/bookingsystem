@@ -106,6 +106,19 @@
 			<artifactId>javax.persistence-api</artifactId>
 			<version>2.2</version>  <!-- Or use the appropriate version -->
 		</dependency>
+		<!-- Spring Boot Starter for Quartz -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-quartz</artifactId>
+			<version>3.3.5</version> <!-- Ensure correct version -->
+		</dependency>
+
+		<!-- Quartz Scheduler -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.3.2</version> <!-- Ensure correct version -->
+		</dependency>
 	</dependencies>
 
 	<build>

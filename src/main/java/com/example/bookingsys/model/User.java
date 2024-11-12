@@ -13,10 +13,12 @@ public class User {
     private Long id;
 
     private String username;
+    private String email;
     private String password;
     private String role;
+    private boolean emailVerified;
 
-    // Getter and Setter for id
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -25,7 +27,6 @@ public class User {
         this.id = id;
     }
 
-    // Getter and Setter for username
     public String getUsername() {
         return username;
     }
@@ -34,7 +35,14 @@ public class User {
         this.username = username;
     }
 
-    // Getter and Setter for password
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -43,12 +51,19 @@ public class User {
         this.password = password;
     }
 
-    // Getter and Setter for role
     public String getRole() {
         return role;
     }
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 }
