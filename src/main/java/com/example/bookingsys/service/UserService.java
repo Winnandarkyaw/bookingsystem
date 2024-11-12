@@ -77,4 +77,37 @@ public class UserService {
         System.out.println("Payment charged: $" + amount);
         return true;
     }
+
+    // Deduct credits when booking a class
+    public boolean deductCredits(Long userId, int credits) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Check if the user has enough credits
+        if (user.getCredits() < credits) {
+            return false;  // Not enough credits
+        }
+
+        // Deduct credits and save the user record
+        user.setCredits(user.getCredits() - credits);
+        userRepository.save(user);
+        return true;  // Deduction successful
+    }
+
+
+    // Refund credits when a booking is canceled
+    public void refundCredits(Long userId, int credits) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setCredits(user.getCredits() + credits);
+        userRepository.save(user);
+    }
+
+    // Check if user has sufficient credits
+    public boolean hasSufficientCredits(Long userId, int requiredCredits) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return user.getCredits() >= requiredCredits;
+    }
 }

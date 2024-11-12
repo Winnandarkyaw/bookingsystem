@@ -1,0 +1,31 @@
+package com.example.bookingsys.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor  // Lombok will generate a no-argument constructor
+@AllArgsConstructor // Lombok will generate a constructor with all arguments
+public class AvailableClass {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String countryCode;
+    private int requiredCredits;
+    private int totalSlots;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+    @Column(name = "current_booked_slots")
+    private int currentBookedSlots;
+}
