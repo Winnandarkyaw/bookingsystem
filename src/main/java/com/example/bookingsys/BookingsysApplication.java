@@ -8,10 +8,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
+
 @EntityScan(basePackages = {"com.example.bookingsys.model.*"})
 @EnableJpaRepositories(basePackages={"com.example.bookingsys.repository.*"})
 @ComponentScan(basePackages = {"com.example.bookingsys.service.*", "com.example.bookingsys.util.*"})
-
 public class BookingsysApplication {
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(BookingsysApplication.class, args);

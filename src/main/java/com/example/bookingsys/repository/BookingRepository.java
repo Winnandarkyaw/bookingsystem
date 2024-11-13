@@ -11,4 +11,6 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByUserIdAndActiveTrue(Long userId);
     List<Booking> findByClassIdAndActiveTrue(Long classId);
+    List<Booking> findByUserId(Long userId);
+    List<Booking> findByClassIdAndIsActiveTrueAndIsConfirmedFalse(Long classId);
 }

@@ -26,7 +26,8 @@ public class Booking {
     private boolean isActive;
     private int creditsUsed;
     private boolean isConfirmed;
-
+    private LocalDateTime classStartTime;
+    private LocalDateTime classEndTime;
     // Constructor with 6 arguments
     public Booking(Long userId, Long classId, LocalDateTime bookingTime, boolean isActive, int creditsUsed, boolean isConfirmed) {
         this.userId = userId;

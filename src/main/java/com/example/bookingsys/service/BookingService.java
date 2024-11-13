@@ -1,5 +1,6 @@
 package com.example.bookingsys.service;
 
+import com.example.bookingsys.exception.BookingNotFoundException;
 import com.example.bookingsys.model.AvailableClass;
 import com.example.bookingsys.model.Booking;
 import com.example.bookingsys.model.Waitlist;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -104,6 +106,59 @@ public class BookingService {
 
         // Clear the waitlist for the class after refunds
         waitlistRepository.deleteAll(waitlistedUsers);
+    }
+    public List<Booking> getBookingsForUser(Long userId) {
+        // Fetch all bookings for the given user from the repository
+        return bookingRepository.findByUserId(userId);
+    }
+    public Booking getBookingById(Long bookingId) {
+        Optional<Booking> booking = bookingRepository.findById(bookingId);
+        return booking.orElse(null);
+    }
+
+    public Booking updateBooking(Long bookingId, Booking updatedBooking) throws BookingNotFoundException {
+        // Find the existing booking by ID
+        Booking existingBooking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID: " + bookingId));
+
+        // Update fields of the existing booking with values from updatedBooking
+        existingBooking.setUserId(updatedBooking.getUserId());
+        existingBooking.setClassId(updatedBooking.getClassId());
+        existingBooking.setBookingTime(updatedBooking.getBookingTime() != null ? updatedBooking.getBookingTime() : LocalDateTime.now());
+        existingBooking.setActive(updatedBooking.isActive());
+        existingBooking.setCreditsUsed(updatedBooking.getCreditsUsed());
+        existingBooking.setConfirmed(updatedBooking.isConfirmed());
+
+        // Save the updated booking
+        return bookingRepository.save(existingBooking);
+    }
+
+    public void confirmBooking(Long bookingId) throws BookingNotFoundException {
+        // Find the booking by ID
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID: " + bookingId));
+
+        // Update the confirmation status
+        booking.setConfirmed(true);
+
+        // Save the updated booking
+        bookingRepository.save(booking);
+    }
+
+    public List<Booking> getWaitlistForClass(Long classId) {
+        // Query to find all active and unconfirmed bookings for the given classId
+        return bookingRepository.findByClassIdAndIsActiveTrueAndIsConfirmedFalse(classId);
+    }
+
+    // Prevent overlapping class booking
+    public boolean checkOverlap(Long userId, LocalDateTime startTime, LocalDateTime endTime) {
+        List<Booking> userBookings = bookingRepository.findByUserId(userId);
+        for (Booking booking : userBookings) {
+            if (startTime.isBefore(booking.getClassEndTime()) && endTime.isAfter(booking.getClassStartTime())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

@@ -5,6 +5,7 @@ import com.example.bookingsys.model.Waitlist;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -21,4 +22,9 @@ public interface WaitlistRepository extends JpaRepository<Waitlist, Long> {
 
     // Check if a user is already on the waitlist for a class
     boolean existsByUserIdAndClassId(Long userId, Long classId);
+
+    // Custom query method to find waitlist entries before a given time
+    List<Waitlist> findByAddedTimeBefore(LocalDateTime expirationTime);
+
+    long countByClassId(Long classId);
 }
