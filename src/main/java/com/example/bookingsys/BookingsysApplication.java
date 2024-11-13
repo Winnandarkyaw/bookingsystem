@@ -15,10 +15,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class BookingsysApplication {
 	public static void main(String[] args) {
 		ApplicationContext context = SpringApplication.run(BookingsysApplication.class, args);
-//		String[] beanNames = context.getBeanDefinitionNames();
-//		System.out.println("Beans loaded by Spring:");
-//		for (String beanName : beanNames) {
-//			System.out.println(beanName);
-//		}
+
 	}
 }

@@ -26,6 +26,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
+        System.out.println("JWT FILTER 1");
+
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
     }
@@ -33,6 +35,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        String path = request.getRequestURI();
+
+        // Skip the filter for registration and login endpoints
+        if (path.equals("/api/auth/register") || path.equals("/api/auth/login")) {
+            filterChain.doFilter(request, response);  // Allow the request to continue without authentication
+            return;
+        }
+
         String authorizationHeader = request.getHeader("Authorization");
 
         String username = null;
@@ -59,6 +69,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // Proceed with the request
-        filterChain.doFilter(request, response);
+       filterChain.doFilter(request, response);
+
+
+
     }
 }
