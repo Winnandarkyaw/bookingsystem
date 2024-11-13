@@ -11,6 +11,6 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("Booking API").version("1.0").description("Booking System API Documentation"));
+                .info(new Info().title("Booking System API").version("1.0").description("Booking System API Documentation"));
     }
 }

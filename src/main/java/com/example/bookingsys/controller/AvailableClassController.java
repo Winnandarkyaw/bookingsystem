@@ -1,8 +1,11 @@
 package com.example.bookingsys.controller;
 
-
 import com.example.bookingsys.model.AvailableClass;
 import com.example.bookingsys.service.AvailableClassService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,31 +26,35 @@ public class AvailableClassController {
         this.availableClassService = availableClassService;
     }
 
-    // Get all available classes
+    @Operation(summary = "Get all available classes", description = "Returns a list of all available classes.")
     @GetMapping
     public ResponseEntity<List<AvailableClass>> getAllClasses() {
         List<AvailableClass> classes = availableClassService.getAllClasses();
         return new ResponseEntity<>(classes, HttpStatus.OK);
     }
 
-    // Get a class by ID
+    @Operation(summary = "Get a class by ID", description = "Fetches a specific available class by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved class"),
+            @ApiResponse(responseCode = "404", description = "Class not found")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<AvailableClass> getClassById(@PathVariable Long id) {
+    public ResponseEntity<AvailableClass> getClassById(@Parameter(description = "ID of the class to be retrieved") @PathVariable Long id) {
         Optional<AvailableClass> availableClass = availableClassService.getClassById(id);
         return availableClass.map(cls -> new ResponseEntity<>(cls, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // Create a new class
+    @Operation(summary = "Create a new class", description = "Creates a new available class.")
     @PostMapping
     public ResponseEntity<AvailableClass> createClass(@RequestBody AvailableClass availableClass) {
         AvailableClass newClass = availableClassService.createClass(availableClass);
         return new ResponseEntity<>(newClass, HttpStatus.CREATED);
     }
 
-    // Update an existing class
+    @Operation(summary = "Update an existing class", description = "Updates the details of an existing class by its ID.")
     @PutMapping("/{id}")
-    public ResponseEntity<AvailableClass> updateClass(@PathVariable Long id, @RequestBody AvailableClass updatedClass) {
+    public ResponseEntity<AvailableClass> updateClass(@Parameter(description = "ID of the class to be updated") @PathVariable Long id, @RequestBody AvailableClass updatedClass) {
         try {
             AvailableClass updated = availableClassService.updateClass(id, updatedClass);
             return new ResponseEntity<>(updated, HttpStatus.OK);
@@ -56,21 +63,21 @@ public class AvailableClassController {
         }
     }
 
-    // Delete a class
+    @Operation(summary = "Delete a class", description = "Deletes an existing class by its ID.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClass(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteClass(@Parameter(description = "ID of the class to be deleted") @PathVariable Long id) {
         availableClassService.deleteClass(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Check if slots are available for booking
+    @Operation(summary = "Check if slots are available for booking", description = "Checks if there are available slots for a specific class.")
     @GetMapping("/{id}/hasAvailableSlots")
     public ResponseEntity<Boolean> hasAvailableSlots(@PathVariable Long id) {
         boolean available = availableClassService.hasAvailableSlots(id);
         return new ResponseEntity<>(available, HttpStatus.OK);
     }
 
-    // Increment booked slots count
+    @Operation(summary = "Increment booked slots count", description = "Increments the number of booked slots for a class.")
     @PostMapping("/{id}/incrementBookedSlots")
     public ResponseEntity<AvailableClass> incrementBookedSlots(@PathVariable Long id) {
         try {
@@ -81,13 +88,14 @@ public class AvailableClassController {
         }
     }
 
-    // Endpoint to check if a class is full
+    @Operation(summary = "Check if class is full", description = "Checks if the class has reached its capacity.")
     @GetMapping("/{id}/isFull")
     public ResponseEntity<Boolean> isClassFull(@PathVariable Long id) {
         boolean isFull = availableClassService.isClassFull(id);
         return new ResponseEntity<>(isFull, HttpStatus.OK);
     }
 
+    @Operation(summary = "Check if class has expired", description = "Checks if the class has expired based on its end time.")
     @GetMapping("/{id}/isExpired")
     public ResponseEntity<Boolean> isClassExpired(@PathVariable Long id) {
         Optional<AvailableClass> availableClass = availableClassService.getClassById(id);
@@ -98,6 +106,7 @@ public class AvailableClassController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Increase class capacity", description = "Increases the capacity of a class by the specified number of additional slots.")
     @PutMapping("/{id}/increaseCapacity")
     public ResponseEntity<AvailableClass> increaseClassCapacity(@PathVariable Long id, @RequestParam int additionalSlots) {
         try {
@@ -108,7 +117,7 @@ public class AvailableClassController {
         }
     }
 
-    // Add user to the waitlist if class is full
+    @Operation(summary = "Add user to the waitlist if class is full", description = "Adds a user to the waitlist if the class is full.")
     @PostMapping("/{id}/waitlist/{userId}")
     public ResponseEntity<String> addToWaitlist(@PathVariable Long id, @PathVariable Long userId) {
         try {
