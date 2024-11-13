@@ -3,9 +3,11 @@ package com.example.bookingsys.service;
 import com.example.bookingsys.exception.BookingNotFoundException;
 import com.example.bookingsys.model.AvailableClass;
 import com.example.bookingsys.model.Booking;
+import com.example.bookingsys.model.CheckIn;
 import com.example.bookingsys.model.Waitlist;
 import com.example.bookingsys.repository.BookingRepository;
 import com.example.bookingsys.repository.AvailableClassRepository;
+import com.example.bookingsys.repository.CheckInRepository;
 import com.example.bookingsys.repository.WaitlistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -160,5 +162,36 @@ public class BookingService {
         }
         return false;
     }
+
+    @Autowired
+    private CheckInRepository checkInRepository; // Repository to store the check-in records
+
+    public boolean checkInToClass(Long userId, Long classId) {
+        // Retrieve the AvailableClass by classId from the repository
+        Optional<AvailableClass> availableClassOpt = classRepository.findById(classId);
+
+        // Check if the class is present
+        if (availableClassOpt.isPresent()) {
+            AvailableClass availableClass = availableClassOpt.get();
+
+            // Get the start time of the class
+            LocalDateTime classStartTime = availableClass.getStartTime();
+
+            // Check if the current time is after the class start time
+            if (LocalDateTime.now().isAfter(classStartTime)) {
+                // Create a new check-in record for the user
+                CheckIn checkIn = new CheckIn(userId, classId, LocalDateTime.now());
+                checkInRepository.save(checkIn);  // Save the check-in record to the repository
+
+                // Successfully checked in
+                return true;
+            }
+        }
+
+        // Class has not started yet, or class was not found
+        return false;
+    }
+
+
 }
 

@@ -9,6 +9,7 @@ import com.example.bookingsys.exception.BookingNotFoundException;
 import com.example.bookingsys.exception.GenericException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -150,6 +151,20 @@ public class BookingController {
             return new ApiResponse<>(HttpStatus.OK, "Waitlist retrieved successfully.", waitlist);
         } catch (Exception e) {
             return new ApiResponse<>(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while retrieving the waitlist.", null);
+        }
+    }
+
+    // POST endpoint for checking into a class
+    @PostMapping("/checkin")
+    public ResponseEntity<String> checkInToClass(@RequestParam Long userId, @RequestParam Long classId) {
+        boolean success = bookingService.checkInToClass(userId, classId);
+
+        // If check-in was successful
+        if (success) {
+            return ResponseEntity.ok("Checked in successfully.");
+        } else {
+            // If class has not started or class not found
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Class has not started or class not found.");
         }
     }
 

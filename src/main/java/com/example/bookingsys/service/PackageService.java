@@ -45,18 +45,13 @@ public class PackageService {
         return packageRepository.findByUserId(userId);
     }
 
-    // Check remaining credits for a user
     public int getRemainingCredits(Long userId) {
         List<Package> userPackages = getUserPackages(userId);
-        int remainingCredits = 0;
-        for (Package pkg : userPackages) {
-            if (pkg.getValidUntil().isAfter(LocalDateTime.now())) {
-                remainingCredits += pkg.getCredits();
-            }
-        }
-        return remainingCredits;
+        return userPackages.stream()
+                .filter(pkg -> pkg.getValidUntil().isAfter(LocalDateTime.now()))
+                .mapToInt(Package::getCredits)
+                .sum();
     }
-
     // Get expired packages for a user
     public List<Package> getExpiredPackages(Long userId) {
         List<Package> userPackages = getUserPackages(userId);
