@@ -3,11 +3,15 @@ package com.example.bookingsys.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.redis.core.RedisHash;
 
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Entity
+@RedisHash("waitlist")
 public class Waitlist {
 
     private Long id;

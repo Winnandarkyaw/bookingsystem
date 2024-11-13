@@ -8,46 +8,57 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-@Entity
+
 @Getter
 @Setter
-@NoArgsConstructor  // Lombok will generate a default constructor
-@AllArgsConstructor // Lombok will generate a constructor with all arguments
-@EqualsAndHashCode  // Lombok generates equals() and hashCode() methods based on all fields
-@ToString  // Lombok generates a toString() method for this class
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString(exclude = "password")
+@Entity// Exclude password from toString for security
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Username is required")
     private String username;
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
+
+    @Email(message = "Email should be valid")
     private String email;
+
     private boolean emailVerified;
     private int credits;
 
-    // Additional fields like createdAt, updatedAt for record keeping
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // Lombok will automatically generate getters and setters for all fields
-    // No need for explicit constructors or getter/setter methods
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 
-    // PreUpdate method for updating the `updatedAt` field
     @PreUpdate
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Custom Constructor to set default values for certain fields
     public User(String username, String password, String email, int credits) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.emailVerified = false; // New users should verify email
+        this.emailVerified = false;
         this.credits = credits;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();

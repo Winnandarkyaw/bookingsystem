@@ -1,13 +1,22 @@
 package com.example.bookingsys.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.redis.core.RedisHash;
 
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Entity
+@NoArgsConstructor  // Lombok will generate a no-argument constructor
+@AllArgsConstructor
+@RedisHash("booking")
+
 public class Booking {
 
     private Long id;

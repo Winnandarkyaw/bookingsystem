@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor  // Lombok will generate a no-argument constructor
 @AllArgsConstructor // Lombok will generate a constructor with all arguments
+@RedisHash("AvailableClass")
 public class AvailableClass {
 
     @Id

@@ -1,6 +1,5 @@
 package com.example.bookingsys.repository;
 
-
 import com.example.bookingsys.model.AvailableClass;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,6 +14,4 @@ public interface AvailableClassRepository extends JpaRepository<AvailableClass, 
 
     // You can use this method to check if a class has available slots
     boolean existsByIdAndCurrentBookedSlotsLessThan(Long classId, int currentBookedSlots);
-
-
 }
