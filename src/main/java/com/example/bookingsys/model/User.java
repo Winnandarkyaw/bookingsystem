@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString(exclude = "password")
-@Entity// Exclude password from toString for security
+@Entity
 public class User {
 
     @Id
